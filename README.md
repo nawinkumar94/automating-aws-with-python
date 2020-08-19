@@ -15,3 +15,6 @@ Automating the AWS with python
 
  -- Create a new bucket and add public access policy and host the bucket for static website "setup_bucket(bucket_name)"
          "pipenv run python webotron/webotron.py setup-bucket 'bucket_name'"
+
+ --Sync a bucket with a path and key and upload files used pathlib and mimetypes  "sync(pathname , bucket_name)"
+         "pipenv run python webotron/webotron.py sync 'path' 'bucket'"
