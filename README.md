@@ -12,3 +12,6 @@ Automating the AWS with python
 
  --List all the objects in S3 buckets "list_buckets_objects(bucket_name)"
          "pipenv run python webotron\webotron.py list-buckets-objects 'bucket_name'"
+
+ -- Create a new bucket and add public access policy and host the bucket for static website "setup_bucket(bucket_name)"
+         "pipenv run python webotron/webotron.py setup-bucket 'bucket_name'"
