@@ -18,3 +18,9 @@ Automating the AWS with python
 
  --Sync a bucket with a path and key and upload files used pathlib and mimetypes  "sync(pathname , bucket_name)"
          "pipenv run python webotron/webotron.py sync 'path' 'bucket'"
+
+  --- Tools for refactoring code
+          "pipenv install -d pycodestyle"
+          "pipenv install -d pydocstyle"
+          "pipenv install -d pylint"
+          "pipenv install -d pyflakes"
