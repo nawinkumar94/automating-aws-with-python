@@ -17,14 +17,20 @@ import click
 from bucket import BucketManager
 
 
-session = boto3.Session(profile_name='pythonAutomation')
-bucket_manager = BucketManager(session)
+session = None
+bucket_manager = None
 
 
 @click.group()
-def cli():
+@click.option('--profile', default=None, help= "Add profile for the credentials" )
+def cli(profile):
     """Grop all the click commands."""
-    pass
+    global session, bucket_manager
+    session_data={}
+    if profile:
+        session_data['profile_name']=profile
+    session = boto3.Session(**session_data)
+    bucket_manager = BucketManager(session)
 
 
 @cli.command('list-buckets')
