@@ -22,13 +22,14 @@ bucket_manager = None
 
 
 @click.group()
-@click.option('--profile', default=None, help= "Add profile for the credentials" )
+@click.option('--profile', default=None,
+                help= "Add profile for the credentials")
 def cli(profile):
     """Grop all the click commands."""
     global session, bucket_manager
-    session_data={}
+    session_data = {}
     if profile:
-        session_data['profile_name']=profile
+        session_data['profile_name'] = profile
     session = boto3.Session(**session_data)
     bucket_manager = BucketManager(session)
 
@@ -63,6 +64,8 @@ def setup_bucket(bucket_name):
 def sync(pathname, bucket_name):
     """Sync the contents of the path name to bucket."""
     bucket_manager.sync_bucket(pathname, bucket_name)
+    print("The URL of hosted bucket is : "
+                    +bucket_manager.get_bucket_url(bucket_name))
 
 
 if __name__ == '__main__':
