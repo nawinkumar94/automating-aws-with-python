@@ -17,11 +17,16 @@ import click
 import util
 from bucket import BucketManager
 from domain import DomainManager
+from certificate import CertificateManager
+from cdn import DistributionManager
 
 
 session = None
 bucket_manager = None
 domain_manager = None
+cert_manager = None
+dist_manager = None
+
 
 
 @click.group()
@@ -29,13 +34,15 @@ domain_manager = None
                 help= "Add profile for the credentials")
 def cli(profile):
     """Grop all the click commands."""
-    global session, bucket_manager, domain_manager
+    global session, bucket_manager, domain_manager, cert_manager, dist_manager
     session_data = {}
     if profile:
         session_data['profile_name'] = profile
     session = boto3.Session(**session_data)
     bucket_manager = BucketManager(session)
     domain_manager = DomainManager(session)
+    cert_manager = CertificateManager(session)
+    dist_manager = DistributionManager(session)
 
 
 @cli.command('list-buckets')
@@ -82,6 +89,39 @@ def setup_domain(domain_name):
             or domain_manager.create_hosted_zone(domain_name)
     endpoint = util.region_endpoint(bucket_manager.get_region_name(bucket_name))
     domain_manager.create_s3_domain_record(zone, domain_name, endpoint)
+
+@cli.command('find-cert')
+@click.argument('domain_name')
+def find_cert(domain_name):
+    """Find a certificate for <DOMAIN>."""
+    print(cert_manager.find_matching_cert(domain_name))
+
+@cli.command('setup-cdn')
+@click.argument('domain')
+@click.argument('bucket')
+def setup_cdn(domain, bucket):
+    """Set up CloudFront CDN for DOMAIN pointing to BUCKET."""
+    dist = dist_manager.find_matching_dist(domain)
+
+    if not dist:
+        cert = cert_manager.find_matching_cert(domain)
+        if not cert:  # SSL is not optional at this time
+            print("Error: No matching cert found.")
+            return
+
+        dist = dist_manager.create_dist(domain, cert)
+        print("Waiting for distribution deployment...")
+        dist_manager.await_deploy(dist)
+
+    zone = domain_manager.find_hosted_zone(domain) \
+        or domain_manager.create_hosted_zone(domain)
+
+    domain_manager.create_cf_domain_record(zone, domain, dist['DomainName'])
+    print("Domain configured: https://{}".format(domain))
+
+    return
+
+
 
 if __name__ == '__main__':
     cli()
