@@ -14,11 +14,14 @@ Webotron automates the process of deploying the static website hosting
 
 import boto3
 import click
+import util
 from bucket import BucketManager
+from domain import DomainManager
 
 
 session = None
 bucket_manager = None
+domain_manager = None
 
 
 @click.group()
@@ -26,12 +29,13 @@ bucket_manager = None
                 help= "Add profile for the credentials")
 def cli(profile):
     """Grop all the click commands."""
-    global session, bucket_manager
+    global session, bucket_manager, domain_manager
     session_data = {}
     if profile:
         session_data['profile_name'] = profile
     session = boto3.Session(**session_data)
     bucket_manager = BucketManager(session)
+    domain_manager = DomainManager(session)
 
 
 @cli.command('list-buckets')
@@ -67,6 +71,17 @@ def sync(pathname, bucket_name):
     print("The URL of hosted bucket is : "
                     +bucket_manager.get_bucket_url(bucket_name))
 
+
+@cli.command('setup-domain')
+@click.argument('domain_name')
+def setup_domain(domain_name):
+    """Set the domain name for the bucket."""
+    # since both bucket and domain should be a same,setting bucket name to domain_name
+    bucket_name = domain_name
+    zone =  domain_manager.find_hosted_zone(domain_name) \
+            or domain_manager.create_hosted_zone(domain_name)
+    endpoint = util.region_endpoint(bucket_manager.get_region_name(bucket_name))
+    domain_manager.create_s3_domain_record(zone, domain_name, endpoint)
 
 if __name__ == '__main__':
     cli()
