@@ -6,7 +6,7 @@ from botocore.exceptions import ClientError
 from boto3.s3.transfer import TransferConfig
 from hashlib import md5
 import mimetypes
-import util
+from webotron import util
 
 
 class BucketManager:

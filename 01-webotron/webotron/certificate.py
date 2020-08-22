@@ -15,10 +15,10 @@ class CertificateManager:
                         CertificateArn = cert_arn)
         alt_names = cert_details['Certificate']['SubjectAlternativeNames']
         for name in alt_names:
-            #(eg)automatingaws.net
+            # (eg)automatingaws.net
             if name == domain_name:
                 return True
-            #(eg)*.automatingaws.net
+            # (eg)*.automatingaws.net
             if name[0] == '*' and domain_name.endswith(name[1:]):
                 return True
         return False

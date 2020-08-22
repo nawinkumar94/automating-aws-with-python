@@ -4,7 +4,7 @@
 
 from collections import namedtuple
 
-Endpoint= namedtuple('Endpoint',['name','host','zone'])
+Endpoint= namedtuple('Endpoint', ['name', 'host', 'zone'])
 
 region_to_endpoint = {
     'us-east-2': Endpoint('US East (Ohio)', 's3-website.us-east-2.amazonaws.com', 'Z2O1EMRO9K5GLX'),
@@ -26,9 +26,11 @@ region_to_endpoint = {
     'sa-east-1': Endpoint('South America (São Paulo)', 's3-website-sa-east-1.amazonaws.com', 'Z7KQH4QJS55SO'),
 }
 
+
 def known_region(region):
     """Return true if the region is known region."""
     return region in region_to_endpoint
+
 
 def region_endpoint(region):
     """Return the endpoint for the region."""

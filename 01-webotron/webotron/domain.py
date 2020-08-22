@@ -24,7 +24,6 @@ class DomainManager:
 
     def create_hosted_zone(self, domain_name):
         """Creating the hosted zone if we don't find any hosted zone."""
-        print('domain_name '+domain_name)
         zone_name = '.'.join(domain_name.split('.')[-2:]) + '.'
         return self.route53.create_hosted_zone(
             Name = zone_name ,
@@ -38,14 +37,14 @@ class DomainManager:
             ChangeBatch={
                 'Comment': "created this s3 alias from webotron",
                 'Changes': [{
-                        'Action':'UPSERT',
+                        'Action': 'UPSERT',
                         'ResourceRecordSet': {
                             'Name': domain_name,
                             'Type': 'A',
                             'AliasTarget': {
                                 'HostedZoneId': endpoint.zone,
                                 'DNSName': endpoint.host,
-                                'EvaluateTargetHealth':False
+                                'EvaluateTargetHealth': False
                             }
                         }
                     }]

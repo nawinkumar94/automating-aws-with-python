@@ -33,3 +33,6 @@ Automating the AWS with python
           "pipenv install -d pydocstyle"
           "pipenv install -d pylint"
           "pipenv install -d pyflakes"
+
+
+--- Use command python -m webotron.webotron

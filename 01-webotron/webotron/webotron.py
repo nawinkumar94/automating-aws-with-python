@@ -14,11 +14,11 @@ Webotron automates the process of deploying the static website hosting
 
 import boto3
 import click
-import util
-from bucket import BucketManager
-from domain import DomainManager
-from certificate import CertificateManager
-from cdn import DistributionManager
+from webotron import util
+from webotron.bucket import BucketManager
+from webotron.domain import DomainManager
+from webotron.certificate import CertificateManager
+from webotron.cdn import DistributionManager
 
 
 session = None
@@ -26,7 +26,6 @@ bucket_manager = None
 domain_manager = None
 cert_manager = None
 dist_manager = None
-
 
 
 @click.group()
@@ -76,7 +75,7 @@ def sync(pathname, bucket_name):
     """Sync the contents of the path name to bucket."""
     bucket_manager.sync_bucket(pathname, bucket_name)
     print("The URL of hosted bucket is : "
-                    +bucket_manager.get_bucket_url(bucket_name))
+                    + bucket_manager.get_bucket_url(bucket_name))
 
 
 @cli.command('setup-domain')
@@ -85,16 +84,18 @@ def setup_domain(domain_name):
     """Set the domain name for the bucket."""
     # since both bucket and domain should be a same,setting bucket name to domain_name
     bucket_name = domain_name
-    zone =  domain_manager.find_hosted_zone(domain_name) \
+    zone = domain_manager.find_hosted_zone(domain_name) \
             or domain_manager.create_hosted_zone(domain_name)
     endpoint = util.region_endpoint(bucket_manager.get_region_name(bucket_name))
     domain_manager.create_s3_domain_record(zone, domain_name, endpoint)
+
 
 @cli.command('find-cert')
 @click.argument('domain_name')
 def find_cert(domain_name):
     """Find a certificate for <DOMAIN>."""
     print(cert_manager.find_matching_cert(domain_name))
+
 
 @cli.command('setup-cdn')
 @click.argument('domain')
@@ -120,7 +121,6 @@ def setup_cdn(domain, bucket):
     print("Domain configured: https://{}".format(domain))
 
     return
-
 
 
 if __name__ == '__main__':
