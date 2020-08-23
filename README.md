@@ -43,3 +43,15 @@ Automating the AWS with python
 
 #Features
   Notifon has the following features
+
+--Commands for serverless application
+  # create a serverless application
+    --> serverless create --template aws-python3 --name notifon-notifier
+    --> serverless create -t "Name of template" -n "Name of the lamba function"
+
+  #To deploy application
+    --> sls deploy
+  # invoke a function('hello'-->name of function)
+    --> sls invoke -f hello
+  # To check logs('hello'-->name of function)
+    --> sls logs -f hello
