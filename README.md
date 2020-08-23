@@ -36,3 +36,10 @@ Automating the AWS with python
 
 
 --- Use command python -m webotron.webotron
+
+
+# 02-Notifon
+  Notifon is a project that allows the slack users to get notifications on changes in aws using cloud watch events
+
+#Features
+  Notifon has the following features
