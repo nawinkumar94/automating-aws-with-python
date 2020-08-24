@@ -2,6 +2,5 @@
   "notifier" :{
     "slack_webhook_url": ""
     "profile": ""
-
   }
 }
