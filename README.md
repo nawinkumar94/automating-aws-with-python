@@ -53,7 +53,9 @@ Automating the AWS with python
     --> serverless create -t "Name of template" -n "Name of the lamba function"
   # To deploy application
     --> sls deploy
-  # Invoke a function('post_to_slack'-->name of function)
-    --> sls invoke -f post_to_slack
-  # To check logs('post_to_slack'-->name of function)
-    --> sls logs -f post_to_slack
+  # Invoke a function('startProcessingVideo'-->name of function)
+    --> sls invoke -f startProcessingVideo
+  # To check logs('startProcessingVideo'-->name of function)
+    --> sls logs -f startProcessingVideo -t
+  # Command to add video in to s3 bucket using pathlib
+  pipenv run python upload-file.py --profile=pythonAutomation  "~/Downloads/Pexels Videos 2670.mp4" video-analyze-nk-01
