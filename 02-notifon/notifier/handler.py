@@ -1,8 +1,12 @@
 import os
-
+import requests
 
 def post_to_slack(event, context):
     slack_webhook_url = os.environ['SLACK_WEBHOOK_URL']
+    #sending the entire python dictionary(event) to format using glob operator (**)
+    slack_message = "From {source} at {detail[StartTime]}: {detail[Description]}".format(**event)
+    data = {"text":slack_message}
+    requests.post(slack_webhook_url,json=data)
     print(slack_webhook_url)
-
+    print(event)
     return
