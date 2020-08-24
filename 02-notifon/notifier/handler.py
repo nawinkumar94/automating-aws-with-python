@@ -7,6 +7,4 @@ def post_to_slack(event, context):
     slack_message = "From {source} at {detail[StartTime]}: {detail[Description]}".format(**event)
     data = {"text":slack_message}
     requests.post(slack_webhook_url,json=data)
-    print(slack_webhook_url)
-    print(event)
     return
