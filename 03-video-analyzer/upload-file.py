@@ -19,11 +19,5 @@ def upload_files(profile, path_name, bucket_name):
     bucket = s3.Bucket(bucket_name)
     bucket.upload_file((path.as_posix()),str(path.name))
 
-    #client = session.client('rekognition')
-    #response = client.start_label_detection(
-    #    Video={'S3Object': {'Bucket':bucket_name, 'Name':path.name}})
-    #job_id = response['JobId']
-    #data = client.get_label_detection(JobId=job_id)
-
 if __name__ == '__main__':
     upload_files()
