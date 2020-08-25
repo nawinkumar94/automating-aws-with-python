@@ -1,0 +1,43 @@
+service: videoanalyzer
+
+provider:
+  name: aws
+  runtime: python3.8
+  profile: ${file(../config.dev.json):videoanalyzer.profile}
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "rekognition:*"
+      Resource: "*"
+      #arn:aws:s3:::video-analyze-nk-01
+    - Effect: "Allow"
+      Action:
+        - "s3:GetObject"
+      Resource:
+        - Fn::Join:
+          - ''
+          - - ${self:custom.videosBucketArn}
+            - '/*'
+
+custom:
+  videosBucketArn:
+      Fn::Join:
+        - ':'
+        - - arn
+          - aws
+          - s3
+          - ''
+          - ''
+          - ${file(../config.dev.json):videoanalyzer.videos_bucket}
+
+
+functions:
+  startProcessingVideo:
+    handler: handler.start_processing_video
+    events:
+      - s3:
+          bucket: ${file(../config.dev.json):videoanalyzer.videos_bucket}
+          event: s3:ObjectCreated:*
+          rules:
+            - suffix: .mp4
